@@ -1,22 +1,20 @@
 # projects 🚀
-This repository contains my programming projects, experiments and exercise developed while studyng 
+This repository contains my programming projects, experiments and exercises developed while studying 
 Computer Science
 
---
+---
 
 ## About Me
 
-I am an Informatic Student interested in software development, alghorithms, data analysis and technology.
+I am an Computer Science Student interested in software development, alghorithms, data analysis and technology.
 
---
+---
 
 ## Skills
 -Python
 -Git
 -Java
--AI
-
---
+---
 
 ## Projects
 
