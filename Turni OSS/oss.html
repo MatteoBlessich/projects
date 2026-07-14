@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestione Turni OSS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --bg:#F3F5F7;
+    --panel:#FFFFFF;
+    --ink:#1E2530;
+    --ink-soft:#647082;
+    --line:#E1E5EA;
+    --primary:#1F6F78;
+    --primary-deep:#154D53;
+    --primary-bg:#E6F1F1;
+    --danger:#B3261E;
+    --danger-bg:#FBEAEA;
+
+    --mattina-bg:#F4D58D; --mattina-fg:#4A3200;
+    --pomeriggio-bg:#8FB8DE; --pomeriggio-fg:#0B2A45;
+    --notte-bg:#2B2A55; --notte-fg:#FFFFFF;
+    --smonto-bg:#DDD8CF; --smonto-fg:#4A463E;
+    --riposo-bg:#C9E4D3; --riposo-fg:#1E4430;
+    --ferie-bg:#9FE0D6; --ferie-fg:#0B4D45;
+    --malattia-bg:#F5C2C0; --malattia-fg:#7A1E1B;
+    --lungamp-bg:#E8934A; --lungamp-fg:#4A2A05;
+    --lungapn-bg:#6B3FA0; --lungapn-fg:#FFFFFF;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter', sans-serif; font-size:15px; line-height:1.5;
+    padding-bottom:60px;
+  }
+  .app{ max-width:1180px; margin:0 auto; padding:36px 24px; }
+  h1{ font-size:1.7rem; margin:0 0 4px; letter-spacing:-0.01em; }
+  .subtitle{ color:var(--ink-soft); margin:0 0 32px; font-size:0.98rem; }
+
+  .panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:24px 26px; margin-bottom:22px;
+  }
+  .panel h2{ font-size:1.05rem; margin:0 0 4px; }
+  .panel .hint{ color:var(--ink-soft); font-size:0.88rem; margin:0 0 18px; }
+
+  /* ---- staff table ---- */
+  table.staff{ width:100%; border-collapse:collapse; }
+  table.staff th{
+    text-align:left; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--ink-soft); font-weight:600; padding:8px 10px; border-bottom:1px solid var(--line);
+  }
+  table.staff td{ padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:middle; }
+  table.staff tr.group-row td{
+    font-weight:600; color:var(--primary-deep); background:var(--primary-bg);
+    border-radius:8px; padding-top:10px; padding-bottom:10px;
+  }
+  input[type=text], input[type=date], select{
+    font-family:'Inter', sans-serif; font-size:0.92rem; padding:8px 10px;
+    border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--ink);
+    width:100%;
+  }
+  .name-input{ min-width:130px; }
+  .cycle-dots{ display:flex; gap:5px; }
+  .cycle-dots span{
+    width:14px; height:14px; border-radius:50%; display:inline-block;
+    border:1px solid rgba(0,0,0,0.12);
+  }
+
+  /* ---- buttons ---- */
+  button{
+    font-family:'Inter', sans-serif; font-weight:600; font-size:0.9rem;
+    padding:10px 18px; border-radius:9px; border:1px solid transparent;
+    cursor:pointer; transition:transform .12s ease, box-shadow .12s ease;
+  }
+  button:hover{ transform:translateY(-1px); }
+  .btn-primary{ background:var(--primary); color:#fff; }
+  .btn-primary:hover{ box-shadow:0 8px 18px -8px rgba(21,77,83,0.5); }
+  .btn-ghost{ background:#fff; color:var(--ink); border-color:var(--line); }
+  .btn-ghost:hover{ border-color:var(--ink-soft); }
+  .btn-danger-ghost{ background:#fff; color:var(--danger); border-color:#EAC9C7; font-size:0.8rem; padding:6px 12px; }
+  .btn-small{ font-size:0.82rem; padding:7px 12px; }
+
+  /* ---- period section ---- */
+  .period-row{ display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field label{ font-size:0.78rem; color:var(--ink-soft); font-weight:600; }
+  .field input{ width:180px; }
+  .quick-btns{ display:flex; gap:8px; margin-left:auto; align-self:flex-end; }
+
+  /* ---- absence form ---- */
+  .absence-form{ display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px; }
+  .absence-form .field select, .absence-form .field input{ width:170px; }
+  ul.absence-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  ul.absence-list li{
+    display:flex; align-items:center; gap:12px; justify-content:space-between;
+    background:var(--bg); border:1px solid var(--line); border-radius:9px; padding:9px 14px;
+    font-size:0.88rem;
+  }
+  .absence-tag{
+    font-family:'JetBrains Mono', monospace; font-size:0.72rem; padding:3px 9px; border-radius:6px; font-weight:700;
+  }
+  .absence-tag.Ferie{ background:var(--ferie-bg); color:var(--ferie-fg); }
+  .absence-tag.Malattia{ background:var(--malattia-bg); color:var(--malattia-fg); }
+
+  .actions-row{ display:flex; justify-content:center; margin:32px 0; }
+  .actions-row button{ font-size:1rem; padding:14px 34px; }
+
+  /* ---- legend ---- */
+  .legend{ display:flex; flex-wrap:wrap; gap:10px 20px; margin-bottom:18px; }
+  .legend-item{ display:flex; align-items:center; gap:7px; font-size:0.82rem; color:var(--ink-soft); }
+  .legend-swatch{ width:14px; height:14px; border-radius:4px; }
+
+  /* ---- schedule table ---- */
+  .grid-wrapper{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; }
+  table.schedule{ border-collapse:collapse; width:100%; font-size:0.82rem; }
+  table.schedule th, table.schedule td{
+    padding:7px 9px; border-bottom:1px solid var(--line); border-right:1px solid var(--line);
+    text-align:center; white-space:nowrap;
+  }
+  table.schedule th{
+    background:var(--panel); position:sticky; top:0; font-family:'JetBrains Mono', monospace;
+    font-weight:600; font-size:0.72rem; color:var(--ink-soft); z-index:2;
+  }
+  table.schedule td.name-cell, table.schedule th.name-header{
+    position:sticky; left:0; background:var(--panel); text-align:left; z-index:1;
+    font-weight:600; min-width:130px;
+  }
+  table.schedule tr.group-row td{
+    background:var(--primary-bg); color:var(--primary-deep); font-weight:700; text-align:left;
+  }
+  .chip{
+    display:inline-block; min-width:34px; padding:4px 6px; border-radius:6px;
+    font-weight:700; font-size:0.76rem; position:relative; cursor:default;
+  }
+  .chip.substituted::after{ content:'*'; position:absolute; top:-2px; right:1px; font-size:0.7rem; }
+
+  .uncovered-box{
+    background:var(--danger-bg); border:1px solid #F0C6C4; border-radius:12px;
+    padding:16px 20px; margin-bottom:18px;
+  }
+  .uncovered-box h3{ margin:0 0 8px; color:var(--danger); font-size:0.95rem; }
+  .uncovered-box ul{ margin:0; padding-left:18px; font-size:0.87rem; color:#7A1E1B; }
+
+  .note-banner{
+    font-size:0.83rem; color:var(--ink-soft); margin-top:16px; padding:12px 16px;
+    background:var(--bg); border-radius:9px; border:1px solid var(--line);
+  }
+
+  .export-row{ display:flex; justify-content:flex-end; margin-top:18px; gap:10px; }
+
+  @media (max-width:720px){
+    .period-row{ flex-direction:column; align-items:stretch; }
+    .quick-btns{ margin-left:0; }
+    .field input{ width:100%; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Gestione Turni OSS</h1>
+  <p class="subtitle">Genera il piano turni, gestisci ferie/malattie con copertura automatica ed esporta tutto in Excel.</p>
+  <p class="subtitle" id="saveStatus" style="margin-top:-22px; font-size:0.82rem;"></p>
+
+  <!-- PERSONALE -->
+  <div class="panel">
+    <h2>Personale</h2>
+    <p class="hint">7 OSS a scorrimento (Mattina → Pomeriggio → Notte → Smonto → Riposo) e 2 OSS diurni (Mattina/Pomeriggio alternati, con un giorno di riposo ogni 5). Modifica nomi e turno di partenza se necessario.</p>
+    <table class="staff" id="staffTable"></table>
+    <div style="margin-top:14px;">
+      <button class="btn-ghost btn-small" id="resetBtn">Ripristina valori predefiniti</button>
+    </div>
+  </div>
+
+  <!-- PERIODO -->
+  <div class="panel">
+    <h2>Periodo</h2>
+    <p class="hint">Scegli l'intervallo di date per cui generare il piano turni.</p>
+    <div class="period-row">
+      <div class="field">
+        <label for="startDate">Dal</label>
+        <input type="date" id="startDate">
+      </div>
+      <div class="field">
+        <label for="endDate">Al</label>
+        <input type="date" id="endDate">
+      </div>
+      <div class="quick-btns">
+        <button class="btn-ghost btn-small" id="thisMonthBtn">Questo mese</button>
+        <button class="btn-ghost btn-small" id="next30Btn">Prossimi 30 giorni</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FERIE / MALATTIE -->
+  <div class="panel">
+    <h2>Ferie e malattie</h2>
+    <p class="hint">Aggiungi i periodi di assenza: il programma proverà a coprire automaticamente i turni scoperti con un OSS disponibile.</p>
+    <div class="absence-form">
+      <div class="field">
+        <label for="absStaff">OSS</label>
+        <select id="absStaff"></select>
+      </div>
+      <div class="field">
+        <label for="absType">Tipo</label>
+        <select id="absType">
+          <option value="Ferie">Ferie</option>
+          <option value="Malattia">Malattia</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="absStart">Dal</label>
+        <input type="date" id="absStart">
+      </div>
+      <div class="field">
+        <label for="absEnd">Al</label>
+        <input type="date" id="absEnd">
+      </div>
+      <button class="btn-primary btn-small" id="addAbsenceBtn">Aggiungi assenza</button>
+    </div>
+    <ul class="absence-list" id="absenceList"></ul>
+  </div>
+
+  <div class="actions-row">
+    <button class="btn-primary" id="generateBtn">Genera turni</button>
+  </div>
+
+  <!-- RISULTATO -->
+  <div class="panel" id="resultSection" style="display:none;">
+    <h2>Piano turni</h2>
+    <div class="legend" id="legend"></div>
+    <div id="uncoveredContainer"></div>
+    <div class="grid-wrapper">
+      <table class="schedule" id="scheduleTable"></table>
+    </div>
+    <p class="note-banner">* indica una sostituzione automatica. Verifica sempre manualmente le coperture proposte prima di pubblicare il turno.</p>
+    <div class="export-row">
+      <button class="btn-primary" id="exportBtn">Esporta in Excel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---------- Data model ----------
+  const TURNISTA_CYCLE = ['Mattina','Pomeriggio','Notte','Smonto','Riposo'];
+  const DIURNO_CYCLE   = ['Mattina','Pomeriggio','Mattina','Pomeriggio','Riposo'];
+  const EPOCH = new Date(2024,0,1); // riferimento fisso per rendere stabile la rotazione
+
+  const SHIFT_META = {
+    'Mattina':   { bg:'var(--mattina-bg)',   fg:'var(--mattina-fg)',   short:'M'  },
+    'Pomeriggio':{ bg:'var(--pomeriggio-bg)',fg:'var(--pomeriggio-fg)',short:'P'  },
+    'Notte':     { bg:'var(--notte-bg)',     fg:'var(--notte-fg)',     short:'N'  },
+    'Smonto':    { bg:'var(--smonto-bg)',    fg:'var(--smonto-fg)',    short:'S'  },
+    'Riposo':    { bg:'var(--riposo-bg)',    fg:'var(--riposo-fg)',    short:'R'  },
+    'Ferie':     { bg:'var(--ferie-bg)',     fg:'var(--ferie-fg)',     short:'F'  },
+    'Malattia':  { bg:'var(--malattia-bg)',  fg:'var(--malattia-fg)',  short:'Ml' },
+    'Lunga Mattina-Pomeriggio': { bg:'var(--lungamp-bg)', fg:'var(--lungamp-fg)', short:'LMP' },
+    'Lunga Pomeriggio-Notte':   { bg:'var(--lungapn-bg)', fg:'var(--lungapn-fg)', short:'LPN' }
+  };
+
+  const DEFAULT_STAFF = [
+    { id:'t1', name:'OSS 1', type:'turnista', offset:0 },
+    { id:'t2', name:'OSS 2', type:'turnista', offset:1 },
+    { id:'t3', name:'OSS 3', type:'turnista', offset:2 },
+    { id:'t4', name:'OSS 4', type:'turnista', offset:3 },
+    { id:'t5', name:'OSS 5', type:'turnista', offset:4 },
+    { id:'t6', name:'OSS 6', type:'turnista', offset:0 },
+    { id:'t7', name:'OSS 7', type:'turnista', offset:1 },
+    { id:'d1', name:'OSS 8', type:'diurno',   offset:0 },
+    { id:'d2', name:'OSS 9', type:'diurno',   offset:1 }
+  ];
+
+  let staff = DEFAULT_STAFF.map(s => ({...s}));
+  let absences = []; // { id, staffId, type, start:'YYYY-MM-DD', end:'YYYY-MM-DD' }
+  let lastResult = null;
+
+  // ---------- Persistenza (salvataggio tra sessioni) ----------
+  const STORAGE_AVAILABLE = (typeof window.storage !== 'undefined');
+  const STORAGE_KEY = 'oss-scheduler-state';
+
+  async function loadState(){
+    if(!STORAGE_AVAILABLE) return;
+    try{
+      const result = await window.storage.get(STORAGE_KEY, false);
+      if(result && result.value){
+        const data = JSON.parse(result.value);
+        if(Array.isArray(data.staff) && data.staff.length) staff = data.staff;
+        if(Array.isArray(data.absences)) absences = data.absences;
+      }
+    }catch(e){
+      // nessun dato salvato ancora: si parte dai valori predefiniti
+    }
+  }
+  async function saveState(){
+    if(!STORAGE_AVAILABLE) return;
+    try{
+      await window.storage.set(STORAGE_KEY, JSON.stringify({ staff, absences }), false);
+    }catch(e){
+      console.error('Errore nel salvataggio dei dati', e);
+    }
+  }
+  function updateSaveStatusUI(){
+    const el = document.getElementById('saveStatus');
+    el.textContent = STORAGE_AVAILABLE
+      ? '● Salvataggio automatico attivo: nomi e assenze restano salvati tra una sessione e l\'altra.'
+      : '○ Salvataggio automatico non disponibile in questo ambiente: i dati si azzerano ricaricando la pagina.';
+  }
+
+  // ---------- Helpers ----------
+  function parseDate(str){ return new Date(str + 'T00:00:00'); }
+  function fmtKey(date){
+    const y=date.getFullYear(), m=String(date.getMonth()+1).padStart(2,'0'), d=String(date.getDate()).padStart(2,'0');
+    return `${y}-${m}-${d}`;
+  }
+  function fmtHeader(date){
+    const wd=['Dom','Lun','Mar','Mer','Gio','Ven','Sab'][date.getDay()];
+    return `${wd} ${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}`;
+  }
+  function dayIndex(date){ return Math.floor((date - EPOCH) / 86400000); }
+  function staffById(id){ return staff.find(s=>s.id===id); }
+
+  function baseShiftFor(person, date){
+    const cycle = person.type === 'turnista' ? TURNISTA_CYCLE : DIURNO_CYCLE;
+    const idx = (((dayIndex(date) + person.offset) % 5) + 5) % 5;
+    return cycle[idx];
+  }
+
+  function absenceOn(staffId, date){
+    const key = fmtKey(date);
+    const hit = absences.find(a => a.staffId===staffId && key>=a.start && key<=a.end);
+    return hit ? hit.type : null;
+  }
+
+  // ---------- Render: staff table ----------
+  function cycleDots(person){
+    const cycle = person.type === 'turnista' ? TURNISTA_CYCLE : DIURNO_CYCLE;
+    const seq = [0,1,2,3,4].map(i => cycle[(i + person.offset) % 5]);
+    return `<div class="cycle-dots">` + seq.map(s => `<span title="${s}" style="background:${SHIFT_META[s].bg}"></span>`).join('') + `</div>`;
+  }
+
+  function offsetOptions(person){
+    if(person.type==='turnista'){
+      return TURNISTA_CYCLE.map((s,i)=>`<option value="${i}" ${person.offset===i?'selected':''}>Parte con: ${s}</option>`).join('');
+    }
+    return `<option value="0" ${person.offset===0?'selected':''}>Parte con: Mattina</option>
+            <option value="1" ${person.offset===1?'selected':''}>Parte con: Pomeriggio</option>`;
+  }
+
+  function renderStaffTable(){
+    const turnisti = staff.filter(s=>s.type==='turnista');
+    const diurni = staff.filter(s=>s.type==='diurno');
+    let html = `<tr><th>Nome</th><th>Ruolo</th><th>Turno di partenza</th><th>Rotazione personale</th></tr>`;
+    html += `<tr class="group-row"><td colspan="4">Turnisti a scorrimento (7)</td></tr>`;
+    turnisti.forEach(p => html += staffRow(p, 'Turnista'));
+    html += `<tr class="group-row"><td colspan="4">OSS diurni (2)</td></tr>`;
+    diurni.forEach(p => html += staffRow(p, 'Diurno'));
+    document.getElementById('staffTable').innerHTML = html;
+
+    document.querySelectorAll('.staff-name').forEach(inp=>{
+      inp.addEventListener('input', e=>{
+        staffById(e.target.dataset.id).name = e.target.value;
+        renderAbsenceStaffOptions();
+      });
+      inp.addEventListener('change', saveState);
+    });
+    document.querySelectorAll('.staff-offset').forEach(sel=>{
+      sel.addEventListener('change', e=>{
+        staffById(e.target.dataset.id).offset = parseInt(e.target.value,10);
+        renderStaffTable();
+        saveState();
+      });
+    });
+  }
+  function staffRow(p, roleLabel){
+    return `<tr>
+      <td><input class="staff-name name-input" type="text" value="${p.name}" data-id="${p.id}"></td>
+      <td>${roleLabel}</td>
+      <td><select class="staff-offset" data-id="${p.id}">${offsetOptions(p)}</select></td>
+      <td>${cycleDots(p)}</td>
+    </tr>`;
+  }
+
+  // ---------- Render: absences ----------
+  function renderAbsenceStaffOptions(){
+    const sel = document.getElementById('absStaff');
+    sel.innerHTML = staff.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  }
+  function renderAbsenceList(){
+    const ul = document.getElementById('absenceList');
+    if(absences.length===0){ ul.innerHTML = `<li style="justify-content:center;color:var(--ink-soft);">Nessuna assenza inserita.</li>`; return; }
+    ul.innerHTML = absences.map(a=>{
+      const name = staffById(a.staffId) ? staffById(a.staffId).name : '(rimosso)';
+      return `<li>
+        <span><strong>${name}</strong> — <span class="absence-tag ${a.type}">${a.type}</span> dal ${a.start.split('-').reverse().join('/')} al ${a.end.split('-').reverse().join('/')}</span>
+        <button class="btn-danger-ghost" data-id="${a.id}">Rimuovi</button>
+      </li>`;
+    }).join('');
+    ul.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        absences = absences.filter(a=>a.id!==e.target.dataset.id);
+        renderAbsenceList();
+        saveState();
+      });
+    });
+  }
+
+  document.getElementById('addAbsenceBtn').addEventListener('click', ()=>{
+    const staffId = document.getElementById('absStaff').value;
+    const type = document.getElementById('absType').value;
+    const start = document.getElementById('absStart').value;
+    const end = document.getElementById('absEnd').value;
+    if(!staffId || !start || !end){ alert('Compila OSS, data inizio e data fine.'); return; }
+    if(end < start){ alert('La data di fine non può precedere la data di inizio.'); return; }
+    absences.push({ id:'a'+Date.now()+Math.random().toString(16).slice(2), staffId, type, start, end });
+    renderAbsenceList();
+    saveState();
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    if(!confirm('Ripristinare nomi, turni di partenza e assenze ai valori predefiniti?')) return;
+    staff = DEFAULT_STAFF.map(s => ({...s}));
+    absences = [];
+    renderStaffTable();
+    renderAbsenceStaffOptions();
+    renderAbsenceList();
+    saveState();
+  });
+
+  // ---------- Period quick buttons ----------
+  document.getElementById('thisMonthBtn').addEventListener('click', ()=>{
+    const now = new Date();
+    const first = new Date(now.getFullYear(), now.getMonth(), 1);
+    const last = new Date(now.getFullYear(), now.getMonth()+1, 0);
+    document.getElementById('startDate').value = fmtKey(first);
+    document.getElementById('endDate').value = fmtKey(last);
+  });
+  document.getElementById('next30Btn').addEventListener('click', ()=>{
+    const now = new Date();
+    const end = new Date(now); end.setDate(end.getDate()+29);
+    document.getElementById('startDate').value = fmtKey(now);
+    document.getElementById('endDate').value = fmtKey(end);
+  });
+
+  // ---------- Schedule generation ----------
+  // Criterio di copertura, in ordine di tentativo per ogni turno scoperto da un'assenza:
+  //  1) Sostituzione "normale": un OSS che quel giorno era in Riposo prende il turno mancante.
+  //  2) "Lunga": se nessuno è libero, un collega già in turno su uno slot ADIACENTE allo
+  //     stesso giorno allunga il proprio turno per coprire anche quello mancante:
+  //       - Mattina scoperta   -> chi fa Pomeriggio diventa "Lunga Mattina-Pomeriggio"
+  //       - Pomeriggio scoperto-> chi fa Mattina diventa "Lunga Mattina-Pomeriggio"
+  //                               oppure chi fa Notte diventa "Lunga Pomeriggio-Notte"
+  //       - Notte scoperta     -> chi fa Pomeriggio diventa "Lunga Pomeriggio-Notte" (solo turnisti)
+  //     Un OSS non adiacente (es. chi fa Mattina) non viene MAI usato per una lunga che non
+  //     tocca il proprio turno (es. non può fare "Lunga Pomeriggio-Notte" se quel giorno fa Mattina).
+  //  3) Se anche la lunga non è possibile, il turno resta segnalato come scoperto.
+  const LUNGA_RULES = {
+    'Mattina':    [ { neededBase:'Pomeriggio', label:'Lunga Mattina-Pomeriggio', turnistaOnly:false } ],
+    'Pomeriggio': [ { neededBase:'Mattina',    label:'Lunga Mattina-Pomeriggio', turnistaOnly:false },
+                    { neededBase:'Notte',      label:'Lunga Pomeriggio-Notte',   turnistaOnly:true  } ],
+    'Notte':      [ { neededBase:'Pomeriggio', label:'Lunga Pomeriggio-Notte',   turnistaOnly:true  } ]
+  };
+  const SHIFT_PRIORITY = { 'Notte':0, 'Mattina':1, 'Pomeriggio':2 };
+
+  function generateSchedule(startDate, endDate){
+    const days = [];
+    for(let d=new Date(startDate); d<=endDate; d.setDate(d.getDate()+1)) days.push(new Date(d));
+
+    const coverageCount = {}; staff.forEach(s=>coverageCount[s.id]=0);
+    const schedule = {}; staff.forEach(s=>schedule[s.id]={});
+    const uncovered = [];
+
+    days.forEach(date=>{
+      const key = fmtKey(date);
+      const dayInfo = {};
+      staff.forEach(s=>{
+        dayInfo[s.id] = { base: baseShiftFor(s,date), absence: absenceOn(s.id,date) };
+      });
+
+      const vacancies = [];
+      staff.forEach(s=>{
+        const info = dayInfo[s.id];
+        if(info.absence && ['Mattina','Pomeriggio','Notte'].includes(info.base)){
+          vacancies.push({ staffId:s.id, shiftType:info.base });
+        }
+      });
+      vacancies.sort((a,b)=> SHIFT_PRIORITY[a.shiftType] - SHIFT_PRIORITY[b.shiftType]);
+
+      const extraAssigned = new Set(); // OSS già "spesi" oggi per coprire un'assenza altrui
+
+      vacancies.forEach(vac=>{
+        const absentName = staffById(vac.staffId).name;
+
+        // 1) sostituzione normale: qualcuno libero (Riposo) quel giorno
+        let restCandidates = staff.filter(s=>{
+          if(extraAssigned.has(s.id)) return false;
+          const info = dayInfo[s.id];
+          if(info.absence) return false;
+          if(info.base !== 'Riposo') return false;
+          if(vac.shiftType==='Notte' && s.type!=='turnista') return false;
+          return true;
+        });
+        if(restCandidates.length>0){
+          restCandidates.sort((a,b)=>coverageCount[a.id]-coverageCount[b.id]);
+          const chosen = restCandidates[0];
+          extraAssigned.add(chosen.id);
+          coverageCount[chosen.id] += 1;
+          schedule[chosen.id][key] = { shift:vac.shiftType, note:`Sostituisce ${absentName}`, isSub:true };
+          return;
+        }
+
+        // 2) lunga: un collega su turno adiacente, lo stesso giorno, allunga il proprio turno
+        let lungaCandidates = [];
+        LUNGA_RULES[vac.shiftType].forEach(rule=>{
+          staff.forEach(s=>{
+            if(extraAssigned.has(s.id)) return;
+            const info = dayInfo[s.id];
+            if(info.absence) return;
+            if(info.base !== rule.neededBase) return;
+            if(rule.turnistaOnly && s.type !== 'turnista') return;
+            lungaCandidates.push({ candidate:s, label:rule.label });
+          });
+        });
+        if(lungaCandidates.length>0){
+          lungaCandidates.sort((a,b)=>coverageCount[a.candidate.id]-coverageCount[b.candidate.id]);
+          const pick = lungaCandidates[0];
+          extraAssigned.add(pick.candidate.id);
+          coverageCount[pick.candidate.id] += 2; // una lunga pesa di più ai fini dell'equità
+          schedule[pick.candidate.id][key] = { shift:pick.label, note:`Copre anche il turno di ${absentName} (assente)`, isSub:true, isLunga:true };
+          return;
+        }
+
+        // 3) nessuna copertura possibile
+        uncovered.push({ date:key, shiftType:vac.shiftType, personName: absentName });
+      });
+
+      staff.forEach(s=>{
+        if(schedule[s.id][key]) return;
+        const info = dayInfo[s.id];
+        schedule[s.id][key] = info.absence
+          ? { shift:info.absence, note:null, isSub:false }
+          : { shift:info.base, note:null, isSub:false };
+      });
+    });
+
+    return { days, schedule, uncovered };
+  }
+
+  // ---------- Render: legend ----------
+  function renderLegend(){
+    const order = ['Mattina','Pomeriggio','Notte','Smonto','Riposo','Lunga Mattina-Pomeriggio','Lunga Pomeriggio-Notte','Ferie','Malattia'];
+    document.getElementById('legend').innerHTML = order.map(s=>
+      `<div class="legend-item"><span class="legend-swatch" style="background:${SHIFT_META[s].bg}"></span>${s}</div>`
+    ).join('') + `<div class="legend-item"><strong>*</strong>&nbsp;sostituzione automatica</div>`;
+  }
+
+  // ---------- Render: schedule table ----------
+  function renderScheduleGrid(result){
+    const { days, schedule, uncovered } = result;
+    const turnisti = staff.filter(s=>s.type==='turnista');
+    const diurni = staff.filter(s=>s.type==='diurno');
+
+    let head = `<tr><th class="name-header">OSS</th>` + days.map(d=>`<th>${fmtHeader(d)}</th>`).join('') + `</tr>`;
+    function rows(list){
+      return list.map(s=>{
+        const cells = days.map(d=>{
+          const key = fmtKey(d);
+          const info = schedule[s.id][key];
+          const meta = SHIFT_META[info.shift];
+          const title = info.note ? `${info.shift} — ${info.note}` : info.shift;
+          return `<td><span class="chip ${info.isSub?'substituted':''}" title="${title}" style="background:${meta.bg};color:${meta.fg}">${meta.short}</span></td>`;
+        }).join('');
+        return `<tr><td class="name-cell">${s.name}</td>${cells}</tr>`;
+      }).join('');
+    }
+
+    let body = `<tr class="group-row"><td colspan="${days.length+1}">Turnisti a scorrimento</td></tr>`;
+    body += rows(turnisti);
+    body += `<tr class="group-row"><td colspan="${days.length+1}">OSS diurni</td></tr>`;
+    body += rows(diurni);
+
+    document.getElementById('scheduleTable').innerHTML = head + body;
+
+    const uncoveredContainer = document.getElementById('uncoveredContainer');
+    if(uncovered.length>0){
+      uncoveredContainer.innerHTML = `<div class="uncovered-box">
+        <h3>⚠ ${uncovered.length} turno/i scoperto/i — nessun OSS disponibile per la copertura</h3>
+        <ul>${uncovered.map(u=>`<li>${u.date.split('-').reverse().join('/')} — ${u.shiftType} (al posto di ${u.personName})</li>`).join('')}</ul>
+      </div>`;
+    } else {
+      uncoveredContainer.innerHTML = '';
+    }
+  }
+
+  // ---------- Generate button ----------
+  document.getElementById('generateBtn').addEventListener('click', ()=>{
+    const startVal = document.getElementById('startDate').value;
+    const endVal = document.getElementById('endDate').value;
+    if(!startVal || !endVal){ alert('Seleziona data di inizio e data di fine.'); return; }
+    const startDate = parseDate(startVal);
+    const endDate = parseDate(endVal);
+    if(endDate < startDate){ alert('La data di fine non può precedere la data di inizio.'); return; }
+
+    lastResult = generateSchedule(startDate, endDate);
+    renderLegend();
+    renderScheduleGrid(lastResult);
+    document.getElementById('resultSection').style.display = 'block';
+    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // ---------- Export to Excel ----------
+  document.getElementById('exportBtn').addEventListener('click', ()=>{
+    if(!lastResult) return;
+    const { days, schedule, uncovered } = lastResult;
+    const turnisti = staff.filter(s=>s.type==='turnista');
+    const diurni = staff.filter(s=>s.type==='diurno');
+
+    const header = ['OSS','Ruolo', ...days.map(d=>fmtHeader(d))];
+    function toRows(list, roleLabel){
+      return list.map(s=>{
+        const cells = days.map(d=>{
+          const info = schedule[s.id][fmtKey(d)];
+          return info.note ? `${info.shift} (${info.note})` : info.shift;
+        });
+        return [s.name, roleLabel, ...cells];
+      });
+    }
+
+    const aoa = [header, ...toRows(turnisti,'Turnista'), ...toRows(diurni,'Diurno')];
+    const wsMain = XLSX.utils.aoa_to_sheet(aoa);
+    wsMain['!cols'] = [{wch:16},{wch:10}, ...days.map(()=>({wch:11}))];
+
+    const wsUncovered = XLSX.utils.aoa_to_sheet([
+      ['Data','Turno','Al posto di'],
+      ...uncovered.map(u=>[u.date.split('-').reverse().join('/'), u.shiftType, u.personName])
+    ]);
+    wsUncovered['!cols'] = [{wch:12},{wch:14},{wch:20}];
+
+    const wsLegend = XLSX.utils.aoa_to_sheet([
+      ['Legenda'],
+      ['Mattina','Turno diurno mattutino'],
+      ['Pomeriggio','Turno diurno pomeridiano'],
+      ['Notte','Turno notturno (solo turnisti a scorrimento)'],
+      ['Smonto','Riposo obbligatorio dopo la notte'],
+      ['Riposo','Giorno di riposo settimanale'],
+      ['Lunga Mattina-Pomeriggio','Turno lungo: un OSS già in Mattina o Pomeriggio copre entrambi i turni dello stesso giorno'],
+      ['Lunga Pomeriggio-Notte','Turno lungo: un OSS già in Pomeriggio o Notte (solo turnisti) copre entrambi i turni dello stesso giorno'],
+      ['Ferie','Assenza per ferie'],
+      ['Malattia','Assenza per malattia'],
+      [''],
+      ['Nota:','Il testo tra parentesi in un turno indica una sostituzione o una lunga automatica. Verificare sempre manualmente prima di pubblicare il turno.']
+    ]);
+    wsLegend['!cols'] = [{wch:14},{wch:60}];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, wsMain, 'Piano turni');
+    XLSX.utils.book_append_sheet(wb, wsUncovered, 'Turni scoperti');
+    XLSX.utils.book_append_sheet(wb, wsLegend, 'Legenda');
+
+    const fname = `turni_oss_${fmtKey(days[0])}_${fmtKey(days[days.length-1])}.xlsx`;
+    XLSX.writeFile(wb, fname);
+  });
+
+  // ---------- Init ----------
+  (async function init(){
+    await loadState();
+    renderStaffTable();
+    renderAbsenceStaffOptions();
+    renderAbsenceList();
+    document.getElementById('thisMonthBtn').click();
+    updateSaveStatusUI();
+  })();
+</script>
+</body>
+</html>
