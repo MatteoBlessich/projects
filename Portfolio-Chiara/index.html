@@ -1,662 +1,737 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chiara Blessich | Social Media Manager</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chiara Blessich — Social Media Manager</title>
+<!--
+  NOTE PER CHI MODIFICA QUESTO FILE:
+  - Numero WhatsApp placeholder: cercare "393330000000" e sostituirlo con il numero reale (formato internazionale, senza + e senza spazi).
+  - Email placeholder: "info@chiarablessich.it" — sostituire con l'indirizzo reale.
+  - Instagram placeholder: "@chiarablessich" / link "https://instagram.com/chiarablessich" — sostituire con il profilo reale.
+  - Prezzi dei pacchetti e statistiche sono indicativi/di esempio: da aggiornare con i dati reali.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bone: #F1ECE2;
+    --bone-deep: #E7E0D0;
+    --card: #FBF8F2;
+    --ink: #201D19;
+    --ink-soft: #6B655C;
+    --teal: #0E5A4A;
+    --teal-deep: #0A3F35;
+    --raspberry: #C93F5C;
+    --raspberry-deep: #9E2F49;
+    --line: rgba(32,29,25,0.14);
+    --radius: 18px;
+    --maxw: 1180px;
+  }
 
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bone);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; text-decoration:none; }
+  ul{ margin:0; padding:0; list-style:none; }
+  section{ scroll-margin-top:88px; }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 32px; }
+  @media (max-width:640px){ .wrap{ padding:0 20px; } }
+
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--raspberry-deep);
+    font-weight:700;
+    margin:0 0 14px;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    color:var(--ink);
+    margin:0;
+  }
+  .heading-lg{
+    font-size:clamp(2.1rem, 4.4vw, 3.4rem);
+    line-height:1.08;
+    letter-spacing:-0.01em;
+  }
+  .heading-lg em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--raspberry-deep);
+  }
+  .lede{
+    font-size:1.08rem;
+    color:var(--ink-soft);
+    max-width:52ch;
+  }
+
+  /* ---------- Ring signature system ---------- */
+  .ring{
+    border-radius:50%;
+    padding:3px;
+    background:conic-gradient(from 210deg, var(--teal), var(--raspberry), var(--teal));
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .ring-inner{
+    width:100%; height:100%;
+    border-radius:50%;
+    background:var(--card);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Fraunces', serif;
+    color:var(--ink);
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:0.95rem;
+    padding:13px 24px;
+    border-radius:999px;
+    border:1.5px solid transparent;
+    cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-primary{ background:var(--raspberry-deep); color:#fff; }
+  .btn-primary:hover{ box-shadow:0 10px 24px -8px rgba(158,47,73,0.55); }
+  .btn-ghost{ background:transparent; color:var(--ink); border-color:var(--line); }
+  .btn-ghost:hover{ border-color:var(--ink); }
+  .btn-block{ width:100%; justify-content:center; }
+  .btn-teal{ background:var(--teal-deep); color:#fff; }
+  .btn-teal:hover{ box-shadow:0 10px 24px -8px rgba(10,63,53,0.5); }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(241,236,226,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid transparent;
+    transition:border-color .25s ease;
+  }
+  header.scrolled{ border-bottom-color:var(--line); }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 0;
+  }
+  .nav-brand{ display:flex; align-items:center; gap:12px; }
+  .nav-brand .ring{ width:40px; height:40px; }
+  .nav-brand .ring-inner{ font-size:0.85rem; font-weight:600; }
+  .nav-brand-text{ display:flex; flex-direction:column; line-height:1.15; }
+  .nav-brand-name{ font-family:'Fraunces', serif; font-weight:600; font-size:1rem; }
+  .nav-brand-role{ font-family:'Space Mono', monospace; font-size:0.66rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); }
+
+  .nav-links{ display:flex; align-items:center; gap:30px; }
+  .nav-links a{
+    font-size:0.92rem; font-weight:500; color:var(--ink-soft);
+    position:relative; padding:4px 0;
+  }
+  .nav-links a::after{
+    content:''; position:absolute; left:0; right:0; bottom:-2px; height:2px;
+    background:var(--raspberry); transform:scaleX(0); transform-origin:left;
+    transition:transform .2s ease;
+  }
+  .nav-links a:hover{ color:var(--ink); }
+  .nav-links a:hover::after{ transform:scaleX(1); }
+  .nav-cta{ display:flex; align-items:center; gap:18px; }
+  .nav-toggle{ display:none; background:none; border:none; cursor:pointer; padding:6px; }
+  .nav-toggle span{ display:block; width:22px; height:2px; background:var(--ink); margin:5px 0; }
+
+  @media (max-width:860px){
+    .nav-links{
+      position:absolute; top:100%; left:0; right:0;
+      background:var(--bone); flex-direction:column; align-items:flex-start;
+      gap:0; padding:8px 32px 20px; border-bottom:1px solid var(--line);
+      display:none;
+    }
+    .nav-links.open{ display:flex; }
+    .nav-links a{ width:100%; padding:12px 0; border-bottom:1px solid var(--line); }
+    .nav-links a:last-child{ border-bottom:none; }
+    .nav-cta .btn-ghost{ display:none; }
+    .nav-toggle{ display:block; }
+  }
+
+  /* ---------- Reveal ---------- */
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.is-visible{ opacity:1; transform:translateY(0); }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+    .btn:hover{ transform:none; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding:76px 0 96px; }
+  .hero-grid{
+    display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px; align-items:center;
+  }
+  .hero-ctas{ display:flex; gap:14px; margin-top:32px; flex-wrap:wrap; }
+
+  .profile-card{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:28px;
+    transform:rotate(-2deg);
+    box-shadow:0 30px 60px -30px rgba(32,29,25,0.35);
+  }
+  .profile-card::before{
+    content:'';
+    position:absolute; inset:18px -14px -14px 18px;
+    background:linear-gradient(135deg, var(--teal-deep), var(--teal));
+    border-radius:var(--radius);
+    z-index:-1;
+    transform:rotate(3deg);
+    opacity:0.9;
+  }
+  .profile-head{ display:flex; align-items:center; gap:14px; }
+  .profile-head .ring{ width:68px; height:68px; }
+  .profile-head .ring-inner{ font-size:1.3rem; font-weight:600; }
+  .profile-name-row{ display:flex; align-items:center; gap:6px; }
+  .profile-name{ font-family:'Fraunces', serif; font-weight:600; font-size:1.15rem; }
+  .profile-bio{ font-family:'Space Mono', monospace; font-size:0.74rem; color:var(--ink-soft); margin-top:2px; }
+  .check{ width:16px; height:16px; }
+
+  .profile-stats{
+    display:flex; justify-content:space-between;
+    margin:22px 0; padding:16px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .profile-stat{ text-align:center; }
+  .profile-stat b{ display:block; font-family:'Fraunces', serif; font-size:1.15rem; }
+  .profile-stat span{ font-family:'Space Mono', monospace; font-size:0.62rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); }
+
+  .mini-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+  .mini-grid div{ aspect-ratio:1; border-radius:6px; }
+
+  @media (max-width:960px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .profile-card{ max-width:380px; margin:0 auto; transform:rotate(0); }
+    .profile-card::before{ display:none; }
+  }
+
+  /* ---------- Section shells ---------- */
+  .section{ padding:96px 0; }
+  .section-alt{ background:var(--bone-deep); }
+  .section-head{ max-width:640px; margin-bottom:52px; }
+
+  /* ---------- About ---------- */
+  .about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start; }
+  .tag-list{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+  .tag-list span{
+    font-family:'Space Mono', monospace; font-size:0.78rem;
+    border:1px solid var(--line); border-radius:999px; padding:7px 14px; color:var(--ink-soft);
+  }
+  .about-sub{ font-family:'Fraunces', serif; font-size:1.2rem; margin-bottom:6px; }
+  @media (max-width:860px){ .about-grid{ grid-template-columns:1fr; gap:36px; } }
+
+  /* ---------- Portfolio ---------- */
+  .portfolio-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .tile{
+    position:relative; border-radius:var(--radius); overflow:hidden;
+    aspect-ratio:4/5; padding:20px; display:flex; flex-direction:column; justify-content:space-between;
+    color:#fff; transition:transform .3s ease;
+  }
+  .tile:hover{ transform:translateY(-6px); }
+  .tile .ring{ width:38px; height:38px; background:conic-gradient(from 210deg, #fff, rgba(255,255,255,0.4), #fff); }
+  .tile .ring-inner{ background:rgba(0,0,0,0.28); color:#fff; font-family:'Space Mono', monospace; font-size:0.78rem; }
+  .tile-cat{ font-family:'Fraunces', serif; font-size:1.15rem; font-weight:600; }
+  .tile-stat{ font-family:'Space Mono', monospace; font-size:0.78rem; opacity:0.92; margin-top:6px; }
+
+  .t1{ background:linear-gradient(135deg, var(--teal-deep), var(--teal)); }
+  .t2{ background:linear-gradient(135deg, var(--raspberry-deep), var(--raspberry)); }
+  .t3{ background:linear-gradient(160deg, var(--ink), var(--teal-deep)); }
+  .t4{ background:linear-gradient(160deg, var(--raspberry-deep), var(--ink)); }
+  .t5{ background:linear-gradient(135deg, var(--teal), var(--raspberry)); }
+  .t6{ background:linear-gradient(160deg, var(--raspberry), var(--teal-deep)); }
+  .tile::after{
+    content:''; position:absolute; inset:0;
+    background-image:repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 14px);
+    pointer-events:none;
+  }
+
+  @media (max-width:860px){ .portfolio-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .portfolio-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- Servizi ---------- */
+  .services-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .service-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:28px; transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .service-card:hover{ transform:translateY(-4px); box-shadow:0 20px 40px -24px rgba(32,29,25,0.3); }
+  .service-card .ring{ width:46px; height:46px; margin-bottom:18px; }
+  .service-card h3{ font-size:1.12rem; margin-bottom:8px; }
+  .service-card p{ color:var(--ink-soft); font-size:0.94rem; margin:0; }
+  @media (max-width:860px){ .services-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px){ .services-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- Risultati ---------- */
+  .stats-band{ display:grid; grid-template-columns:repeat(4,1fr); gap:24px; text-align:center; }
+  .stat-num{ font-family:'Fraunces', serif; font-size:clamp(2.2rem,4vw,3rem); color:var(--teal-deep); }
+  .stat-label{ font-family:'Space Mono', monospace; font-size:0.76rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em; margin-top:6px; }
+  @media (max-width:860px){ .stats-band{ grid-template-columns:1fr 1fr; row-gap:40px; } }
+
+  /* ---------- Pacchetti ---------- */
+  .pricing-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; align-items:stretch; }
+  .price-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:32px 28px; display:flex; flex-direction:column;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .price-card:hover{ transform:translateY(-4px); }
+  .price-card.featured{
+    background:var(--teal-deep); color:#fff; border-color:var(--teal-deep);
+    box-shadow:0 30px 60px -28px rgba(10,63,53,0.55);
+  }
+  .price-badge{
+    font-family:'Space Mono', monospace; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--raspberry-deep); margin-bottom:10px;
+  }
+  .price-card.featured .price-badge{ color:#F2C9D2; }
+  .price-name{ font-family:'Fraunces', serif; font-size:1.4rem; margin-bottom:6px; }
+  .price-tagline{ font-size:0.92rem; color:var(--ink-soft); margin-bottom:20px; }
+  .price-card.featured .price-tagline{ color:rgba(255,255,255,0.78); }
+  .price-value{ font-family:'Fraunces', serif; font-size:2rem; margin-bottom:20px; }
+  .price-value span{ font-family:'Space Mono', monospace; font-size:0.7rem; color:var(--ink-soft); display:block; margin-top:4px; }
+  .price-card.featured .price-value span{ color:rgba(255,255,255,0.7); }
+  .price-features{ margin:0 0 28px; flex-grow:1; }
+  .price-features li{ display:flex; gap:10px; padding:8px 0; font-size:0.92rem; border-top:1px solid var(--line); }
+  .price-card.featured .price-features li{ border-top-color:rgba(255,255,255,0.18); }
+  .price-features li:first-child{ border-top:none; }
+  .price-features svg{ flex-shrink:0; margin-top:3px; }
+
+  @media (max-width:960px){ .pricing-grid{ grid-template-columns:1fr; max-width:440px; margin:0 auto; } }
+
+  .pricing-note{ text-align:center; margin-top:36px; color:var(--ink-soft); font-size:0.9rem; }
+
+  /* ---------- Contatti ---------- */
+  .contact-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .contact-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:30px; text-align:left; display:flex; flex-direction:column; gap:14px;
+  }
+  .contact-card .ring{ width:50px; height:50px; }
+  .contact-card h3{ font-size:1.1rem; }
+  .contact-card p{ color:var(--ink-soft); font-size:0.92rem; margin:0; }
+  .contact-detail{ font-family:'Space Mono', monospace; font-size:0.82rem; color:var(--ink); word-break:break-word; }
+  @media (max-width:860px){ .contact-grid{ grid-template-columns:1fr; } }
+
+  .toast{
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--ink); color:#fff; padding:12px 20px; border-radius:999px;
+    font-size:0.88rem; opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease;
+    font-family:'Inter', sans-serif; z-index:100;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* ---------- Footer ---------- */
+  footer{ padding:56px 0 40px; border-top:1px solid var(--line); }
+  .footer-grid{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+  .footer-brand{ display:flex; align-items:center; gap:12px; }
+  .footer-brand .ring{ width:36px; height:36px; }
+  .footer-brand .ring-inner{ font-size:0.78rem; }
+  .footer-tagline{ font-family:'Fraunces', serif; font-style:italic; color:var(--ink-soft); font-size:0.98rem; }
+  .footer-links{ display:flex; gap:22px; }
+  .footer-links a{ font-size:0.88rem; color:var(--ink-soft); }
+  .footer-links a:hover{ color:var(--ink); }
+  .footer-bottom{ margin-top:28px; font-size:0.8rem; color:var(--ink-soft); font-family:'Space Mono', monospace; }
+</style>
+</head>
 <body>
 
-
-</body>
-
-<header class="hero-premium">
-
-    <div class="hero-container">
-
-
-        <div class="hero-text">
-
-
-            <span class="hero-tag">
-                SOCIAL MEDIA MANAGER
-            </span>
-
-
-            <h1>
-                Chiara<br>
-                Blessich
-            </h1>
-
-
-            <h2>
-                Creo contenuti digitali
-                che raccontano brand
-                e creano connessioni.
-            </h2>
-
-
-            <p>
-                Strategie social, video editing con CapCut
-                e contenuti pensati per aumentare
-                visibilità ed engagement.
-            </p>
-
-
-            <div class="hero-buttons">
-
-                <a href="#portfolio" class="btn-primary">
-                    Guarda il portfolio
-                </a>
-
-
-                <a href="#contact" class="btn-outline">
-                    Contattami
-                </a>
-
-            </div>
-
-
-        </div>
-
-
-
-
-        <div class="hero-video">
-
-
-            <div class="video-frame">
-
-                <img src="images/reel-preview.jpg" 
-                alt="Social Media Content">
-
-
-                <div class="play-button">
-                    ▶
-                </div>
-
-
-            </div>
-
-
-        </div>
-
-
+<header id="siteHeader">
+  <nav class="nav wrap">
+    <div class="nav-brand">
+      <div class="ring"><div class="ring-inner">CB</div></div>
+      <div class="nav-brand-text">
+        <span class="nav-brand-name">Chiara Blessich</span>
+        <span class="nav-brand-role">Social Media Manager</span>
+      </div>
     </div>
-
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#chi-sono">Chi sono</a></li>
+      <li><a href="#portfolio">Portfolio</a></li>
+      <li><a href="#servizi">Servizi</a></li>
+      <li><a href="#risultati">Risultati</a></li>
+      <li><a href="#pacchetti">Pacchetti</a></li>
+      <li><a href="#contatti">Contatti</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#contatti" class="btn btn-ghost">Contatti</a>
+      <a href="https://wa.me/334 279 7655" target="_blank" rel="noopener" class="btn btn-primary">Scrivimi</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Apri menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
 </header>
 
-<section id= "about" class="about">
-<h2>Strategie, contenuti e crescita digitale</h2>
-    <p>
-        Aiuto brand e creator a crescere sui social attraverso contenuti video ad alto impatto.
-        Specializzata in editing con CapCut, storytelling e strategie TikTok/Instagram.
-    </p>
-</section>
-<section id="services" class="services">
+<main>
 
-    <div class="luxury-header">
-
-        <span>MY EXPERTISE</span>
-
-        <h2>
-            Strategie digitali che trasformano
-            idee in contenuti memorabili
-        </h2>
-
-        <p>
-            Creo strategie social personalizzate,
-            contenuti video e identità digitali
-            pensate per aumentare visibilità,
-            engagement e crescita del brand.
-        </p>
-
-    </div>
-
-
-    <div class="services-list">
-
-
-        <div class="service-item">
-
-            <span>01</span>
-
-            <div>
-                <h3>Social Media Strategy</h3>
-
-                <p>
-                    Studio del pubblico, analisi dei trend
-                    e pianificazione dei contenuti.
-                </p>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Social Media Manager · Content Strategist</p>
+        <h1 class="heading-lg">Contenuti che <em>fanno crescere</em> il tuo brand, non solo i tuoi like.</h1>
+        <p class="lede" style="margin-top:22px;">Sono Chiara Blessich. Aiuto piccole imprese, professionisti e personal brand a costruire una presenza social solida, coerente e capace di generare clienti veri — non solo numeri in bacheca.</p>
+        <div class="hero-ctas">
+          <a href="https://wa.me/3342797655" target="_blank" rel="noopener" class="btn btn-primary">Scrivimi su WhatsApp</a>
+          <a href="#risultati" class="btn btn-ghost">Guarda i risultati</a>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-head">
+          <div class="ring"><div class="ring-inner">CB</div></div>
+          <div>
+            <div class="profile-name-row">
+              <span class="profile-name">Chiara Blessich</span>
+              <svg class="check" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#0E5A4A"/><path d="M7 12.5l3 3 7-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
-
+            <p class="profile-bio">Social Media Manager · Content Strategy &amp; Community</p>
+          </div>
         </div>
-
-
-        <div class="service-item">
-
-            <span>02</span>
-
-            <div>
-                <h3>Video Editing & Reels</h3>
-
-                <p>
-                    Montaggio professionale tramite CapCut,
-                    storytelling e contenuti verticali.
-                </p>
-            </div>
-
+        <div class="profile-stats">
+          <div class="profile-stat"><b>128</b><span>Post</span></div>
+          <div class="profile-stat"><b>3.2M</b><span>Reach</span></div>
+          <div class="profile-stat"><b>45+</b><span>Brand</span></div>
         </div>
-
-
-        <div class="service-item">
-
-            <span>03</span>
-
-            <div>
-                <h3>Brand Content</h3>
-
-                <p>
-                    Creazione di contenuti coerenti
-                    con identità e valori del brand.
-                </p>
-
-            </div>
-
+        <div class="mini-grid">
+          <div style="background:linear-gradient(135deg,#0A3F35,#0E5A4A)"></div>
+          <div style="background:linear-gradient(135deg,#9E2F49,#C93F5C)"></div>
+          <div style="background:linear-gradient(160deg,#201D19,#0A3F35)"></div>
+          <div style="background:linear-gradient(160deg,#9E2F49,#201D19)"></div>
+          <div style="background:linear-gradient(135deg,#0E5A4A,#C93F5C)"></div>
+          <div style="background:linear-gradient(160deg,#C93F5C,#0A3F35)"></div>
+          <div style="background:linear-gradient(135deg,#0A3F35,#9E2F49)"></div>
+          <div style="background:linear-gradient(160deg,#0E5A4A,#201D19)"></div>
+          <div style="background:linear-gradient(135deg,#C93F5C,#0E5A4A)"></div>
         </div>
-
-
+      </div>
     </div>
+  </section>
 
-</section>
-
-
-</div>
-
-</section>
-
-<section id="portfolio" class="portfolio-premium">
-
-    <div class="portfolio-header">
-
-        <span>PORTFOLIO</span>
-
-        <h2>
-            Contenuti che raccontano
-            un brand
-        </h2>
-
-        <p>
-            Reel e TikTok creati attraverso
-            storytelling, editing dinamico
-            e strategie pensate per il pubblico.
-        </p>
-
+  <!-- CHI SONO -->
+  <section class="section section-alt" id="chi-sono">
+    <div class="wrap">
+      <div class="about-grid">
+        <div class="reveal">
+          <p class="eyebrow">Chi sono</p>
+          <h2 class="heading-lg" style="font-size:clamp(1.7rem,3vw,2.3rem)">Non gestisco account. Costruisco relazioni.</h2>
+          <p class="lede" style="margin-top:18px; max-width:100%;">Da diversi anni lavoro al fianco di piccole attività e professionisti che vogliono smettere di pubblicare "a caso" e iniziare a comunicare con una strategia vera. Il mio metodo unisce content strategy, copywriting e analisi dei dati: ogni contenuto ha un motivo per esistere, e ogni pacchetto è costruito sugli obiettivi reali del cliente, non su template preconfezionati.</p>
+        </div>
+        <div class="reveal">
+          <p class="about-sub">Di cosa mi occupo</p>
+          <p style="color:var(--ink-soft); margin:0;">Strategia, contenuti e community, dall'idea al risultato misurabile.</p>
+          <div class="tag-list">
+            <span>Content Strategy</span>
+            <span>Copywriting</span>
+            <span>Content Creation</span>
+            <span>Community Management</span>
+            <span>ADV Meta &amp; TikTok</span>
+            <span>Analisi &amp; Report</span>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
 
-
-    <div class="phones">
-
-
-        <!-- VIDEO 1 -->
-
-        <div class="phone">
-
-            <div class="phone-screen">
-
-                <video autoplay muted loop>
-                    <source src="videos/reel-beauty.mp4">
-                </video>
-
-            </div>
-
-
-            <h3>Beauty Campaign</h3>
-
-            <p>
-                Editing CapCut + storytelling prodotto
-            </p>
-
+  <!-- PORTFOLIO -->
+  <section class="section" id="portfolio">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Portfolio</p>
+        <h2 class="heading-lg" style="font-size:clamp(1.8rem,3.4vw,2.6rem)">Alcuni progetti di cui vado fiera</h2>
+      </div>
+      <div class="portfolio-grid">
+        <div class="tile t1 reveal">
+          <div class="ring"><div class="ring-inner">01</div></div>
+          <div><p class="tile-cat">Ristorazione locale</p><p class="tile-stat">+180% reach in 3 mesi</p></div>
         </div>
-
-
-
-
-        <!-- VIDEO 2 -->
-
-
-        <div class="phone">
-
-            <div class="phone-screen">
-
-                <video autoplay muted loop>
-                    <source src="videos/tiktok-fashion.mp4">
-                </video>
-
-            </div>
-
-
-            <h3>Fashion Content</h3>
-
-            <p>
-                Trend TikTok e crescita community
-            </p>
-
+        <div class="tile t2 reveal">
+          <div class="ring"><div class="ring-inner">02</div></div>
+          <div><p class="tile-cat">Beauty &amp; Wellness</p><p class="tile-stat">+2.400 follower in 6 mesi</p></div>
         </div>
-
-
-
-
-
-        <!-- VIDEO 3 -->
-
-
-        <div class="phone">
-
-            <div class="phone-screen">
-
-                <video autoplay muted loop>
-                    <source src="videos/reel-brand.mp4">
-                </video>
-
-            </div>
-
-
-            <h3>Brand Storytelling</h3>
-
-            <p>
-                Contenuti emozionali per il brand
-            </p>
-
+        <div class="tile t3 reveal">
+          <div class="ring"><div class="ring-inner">03</div></div>
+          <div><p class="tile-cat">E-commerce moda</p><p class="tile-stat">+65% traffico da Instagram</p></div>
         </div>
-
-
+        <div class="tile t4 reveal">
+          <div class="ring"><div class="ring-inner">04</div></div>
+          <div><p class="tile-cat">Personal Brand / Coach</p><p class="tile-stat">Community da 0 a 8.000</p></div>
+        </div>
+        <div class="tile t5 reveal">
+          <div class="ring"><div class="ring-inner">05</div></div>
+          <div><p class="tile-cat">Studio professionale</p><p class="tile-stat">+40 contatti qualificati/mese</p></div>
+        </div>
+        <div class="tile t6 reveal">
+          <div class="ring"><div class="ring-inner">06</div></div>
+          <div><p class="tile-cat">Startup tech</p><p class="tile-stat">Lancio prodotto: 1.1M reach</p></div>
+        </div>
+      </div>
     </div>
+  </section>
 
-</section>
-
-<section id="expertise" class="expertise">
-
-    <div class="expertise-header">
-
-        <span>COMPETENZE</span>
-
-        <h2>
-            Creatività e strategia
-            al servizio del brand
-        </h2>
-
+  <!-- SERVIZI -->
+  <section class="section section-alt" id="servizi">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Servizi</p>
+        <h2 class="heading-lg" style="font-size:clamp(1.8rem,3.4vw,2.6rem)">Come posso aiutarti</h2>
+      </div>
+      <div class="services-grid">
+        <div class="service-card reveal">
+          <div class="ring"><div class="ring-inner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h10M4 18h14" stroke="#201D19" stroke-width="2" stroke-linecap="round"/></svg>
+          </div></div>
+          <h3>Content Strategy</h3>
+          <p>Pianificazione editoriale su misura: obiettivi chiari, tone of voice definito, calendario coerente nel tempo.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="ring"><div class="ring-inner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="2" stroke="#201D19" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="#201D19" stroke-width="2"/></svg>
+          </div></div>
+          <h3>Creazione Contenuti</h3>
+          <p>Foto, grafiche e video pensati per la piattaforma giusta, coerenti con l'identità del brand.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="ring"><div class="ring-inner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 18v-2a4 4 0 014-4h8a4 4 0 014 4v2" stroke="#201D19" stroke-width="2"/><circle cx="12" cy="7" r="3" stroke="#201D19" stroke-width="2"/></svg>
+          </div></div>
+          <h3>Copywriting</h3>
+          <p>Didascalie e testi che raccontano davvero il brand, non solo riempiono lo spazio sotto al post.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="ring"><div class="ring-inner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.5 8.5 0 01-12.6 7.4L4 20l1.1-4.4A8.5 8.5 0 1121 11.5z" stroke="#201D19" stroke-width="2"/></svg>
+          </div></div>
+          <h3>Community Management</h3>
+          <p>Risposte, messaggi e commenti gestiti ogni giorno: la community curata come merita.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="ring"><div class="ring-inner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 19V9M12 19V5M20 19v-7" stroke="#201D19" stroke-width="2" stroke-linecap="round"/></svg>
+          </div></div>
+          <h3>Gestione ADV</h3>
+          <p>Campagne Meta &amp; TikTok Ads impostate e ottimizzate per portare risultati misurabili.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="ring"><div class="ring-inner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 4v16h16" stroke="#201D19" stroke-width="2" stroke-linecap="round"/><path d="M8 15l3-4 3 2 4-6" stroke="#201D19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div></div>
+          <h3>Analisi &amp; Report</h3>
+          <p>Report mensile chiaro, con numeri veri, letture d'insieme e i prossimi passi da fare.</p>
+        </div>
+      </div>
     </div>
+  </section>
 
-
-    <div class="expertise-grid">
-
-
-        <div class="expertise-card">
-
-            <div class="number">
-                01
-            </div>
-
-            <h3>
-                Social Strategy
-            </h3>
-
-            <p>
-                Analisi del pubblico, studio dei trend
-                e pianificazione di strategie
-                per Instagram e TikTok.
-            </p>
-
-        </div>
-
-
-
-        <div class="expertise-card">
-
-            <div class="number">
-                02
-            </div>
-
-            <h3>
-                Content Creation
-            </h3>
-
-            <p>
-                Ideazione di Reel, TikTok e contenuti
-                capaci di raccontare il valore del brand.
-            </p>
-
-        </div>
-
-
-
-
-        <div class="expertise-card">
-
-            <div class="number">
-                03
-            </div>
-
-            <h3>
-                Video Editing
-            </h3>
-
-            <p>
-                Montaggio professionale con CapCut,
-                sottotitoli dinamici, ritmo e storytelling.
-            </p>
-
-        </div>
-
-
-
-
-        <div class="expertise-card">
-
-            <div class="number">
-                04
-            </div>
-
-            <h3>
-                Analytics & Growth
-            </h3>
-
-            <p>
-                Monitoraggio delle performance,
-                analisi risultati e ottimizzazione contenuti.
-            </p>
-
-        </div>
-
-
+  <!-- RISULTATI -->
+  <section class="section" id="risultati">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Risultati</p>
+        <h2 class="heading-lg" style="font-size:clamp(1.8rem,3.4vw,2.6rem)">I numeri parlano (anche) per me</h2>
+      </div>
+      <div class="stats-band">
+        <div class="reveal"><div class="stat-num">45+</div><div class="stat-label">Brand seguiti</div></div>
+        <div class="reveal"><div class="stat-num">3.2M</div><div class="stat-label">Reach generato nel 2025</div></div>
+        <div class="reveal"><div class="stat-num">+120%</div><div class="stat-label">Crescita media follower</div></div>
+        <div class="reveal"><div class="stat-num">98%</div><div class="stat-label">Clienti che rinnovano</div></div>
+      </div>
     </div>
+  </section>
 
-</section>
-<section id="results" class="results-premium">
+  <!-- PACCHETTI -->
+  <section class="section section-alt" id="pacchetti">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Pacchetti</p>
+        <h2 class="heading-lg" style="font-size:clamp(1.8rem,3.4vw,2.6rem)">Scegli il supporto giusto per te</h2>
+        <p class="lede" style="margin-top:14px;">Ogni pacchetto è un punto di partenza: lo adattiamo insieme al tuo brand e ai tuoi obiettivi, dopo una prima call conoscitiva gratuita.</p>
+      </div>
+      <div class="pricing-grid">
 
-    <div class="results-header">
-
-        <span>RISULTATI</span>
-
-        <h2>
-            Contenuti creati con
-            obiettivi concreti
-        </h2>
-
-        <p>
-            Ogni contenuto viene progettato,
-            analizzato e ottimizzato per migliorare
-            visibilità, coinvolgimento e crescita.
-        </p>
-
-    </div>
-
-
-    <div class="results-grid">
-
-
-        <div class="result-card">
-
-            <h3>Engagement</h3>
-
-            <p>
-                Creazione di contenuti pensati
-                per aumentare interazioni,
-                commenti e condivisioni.
-            </p>
-
+        <div class="price-card reveal">
+          <p class="price-badge">Starter</p>
+          <p class="price-name">Starter</p>
+          <p class="price-tagline">Per chi inizia a fare sul serio</p>
+          <p class="price-value">da 390€<span>al mese</span></p>
+          <ul class="price-features">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#0E5A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> 12 contenuti al mese</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#0E5A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Piano editoriale mensile</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#0E5A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Copywriting incluso</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#0E5A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Community management base</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#0E5A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Report mensile</li>
+          </ul>
+          <a href="https://wa.me/393330000000?text=Ciao%20Chiara%2C%20sono%20interessato%2Fa%20al%20pacchetto%20Starter!" target="_blank" rel="noopener" class="btn btn-ghost btn-block">Scegli Starter</a>
         </div>
 
-
-
-        <div class="result-card">
-
-            <h3>Più Reach</h3>
-
-            <p>
-                Strategie video basate su trend,
-                storytelling e formato verticale.
-            </p>
-
+        <div class="price-card featured reveal">
+          <p class="price-badge">Il più scelto</p>
+          <p class="price-name">Growth</p>
+          <p class="price-tagline">Per chi vuole crescere con costanza</p>
+          <p class="price-value">da 650€<span>al mese</span></p>
+          <ul class="price-features">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> 20 contenuti al mese (post + stories)</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Content creation avanzata</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Community management attivo</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Gestione ADV base</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Report + call mensile</li>
+          </ul>
+          <a href="https://wa.me/393330000000?text=Ciao%20Chiara%2C%20sono%20interessato%2Fa%20al%20pacchetto%20Growth!" target="_blank" rel="noopener" class="btn btn-primary btn-block">Scegli Growth</a>
         </div>
 
-
-
-
-        <div class="result-card">
-
-            <h3>Community</h3>
-
-            <p>
-                Costruzione di una presenza social
-                coerente e riconoscibile.
-            </p>
-
+        <div class="price-card reveal">
+          <p class="price-badge">Full Management</p>
+          <p class="price-name">Full Management</p>
+          <p class="price-tagline">Per chi vuole delegare tutto</p>
+          <p class="price-value">da 990€<span>al mese</span></p>
+          <ul class="price-features">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#0E5A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Strategia completa multi-canale</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#0E5A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Content creation professionale</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#0E5A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Community management full-time</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#0E5A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Gestione ADV avanzata (Meta &amp; TikTok)</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#0E5A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Report settimanali + call strategiche</li>
+          </ul>
+          <a href="https://wa.me/393330000000?text=Ciao%20Chiara%2C%20sono%20interessato%2Fa%20al%20pacchetto%20Full%20Management!" target="_blank" rel="noopener" class="btn btn-ghost btn-block">Scegli Full Management</a>
         </div>
 
+      </div>
+      <p class="pricing-note">Prezzi indicativi: verranno personalizzati insieme dopo una prima call conoscitiva gratuita.</p>
+    </div>
+  </section>
 
+  <!-- CONTATTI -->
+  <section class="section" id="contatti">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Contatti</p>
+        <h2 class="heading-lg" style="font-size:clamp(1.8rem,3.4vw,2.6rem)">Parliamo del tuo progetto</h2>
+        <p class="lede" style="margin-top:14px;">Scrivimi dove preferisci: rispondo sempre entro 24 ore.</p>
+      </div>
+      <div class="contact-grid">
 
-        <div class="result-card">
-
-            <h3>Data Driven</h3>
-
-            <p>
-                Analisi delle metriche per migliorare
-                continuamente le performance.
-            </p>
-
+        <div class="contact-card reveal">
+          <div class="ring"><div class="ring-inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.5 8.5 0 01-12.6 7.4L4 20l1.1-4.4A8.5 8.5 0 1121 11.5z" stroke="#201D19" stroke-width="2"/></svg>
+          </div></div>
+          <h3>WhatsApp</h3>
+          <p>Il modo più veloce per iniziare a parlare del tuo progetto.</p>
+          <p class="contact-detail">+39 334 279 7655</p>
+          <a href="https://wa.me/393342797655" target="_blank" rel="noopener" class="btn btn-primary btn-block">Apri WhatsApp</a>
         </div>
 
-
-    </div>
-
-
-</section>
-<section id="pricing" class="pricing-premium">
-
-
-<div class="pricing-header">
-
-    <span>PERCORSI SOCIAL</span>
-
-    <h2>
-        Soluzioni pensate
-        per ogni fase del brand
-    </h2>
-
-    <p>
-        Strategie personalizzate per aumentare
-        presenza online, coinvolgimento e crescita.
-    </p>
-
-</div>
-
-
-
-<div class="pricing-grid">
-
-
-    <div class="price-card">
-
-        <h3>START</h3>
-
-        <p class="subtitle">
-            Per iniziare a costruire
-            la presenza digitale.
-        </p>
-
-
-        <ul>
-            <li>✓ Analisi profilo</li>
-            <li>✓ Piano contenuti</li>
-            <li>✓ Editing Reel</li>
-            <li>✓ Supporto trend</li>
-        </ul>
-
-
-        <a href="#">
-            Richiedi informazioni
-        </a>
-
-    </div>
-
-
-
-
-
-    <div class="price-card featured">
-
-
-        <div class="badge">
-            PIÙ SCELTO
+        <div class="contact-card reveal">
+          <div class="ring"><div class="ring-inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#201D19" stroke-width="2"/><path d="M3 7l9 6 9-6" stroke="#201D19" stroke-width="2" stroke-linecap="round"/></svg>
+          </div></div>
+          <h3>Email</h3>
+          <p>Per proposte più dettagliate o richieste formali.</p>
+          <p class="contact-detail" id="emailDetail">chiarablessich@gmail.com</p>
+          <a href="mailto:info@chiarablessich.it" class="btn btn-teal btn-block">Scrivi un'email</a>
         </div>
 
-
-        <h3>GROWTH</h3>
-
-
-        <p class="subtitle">
-            Per brand che vogliono
-            crescere sui social.
-        </p>
-
-
-        <ul>
-            <li>✓ Strategia mensile</li>
-            <li>✓ Creazione Reel/TikTok</li>
-            <li>✓ Calendario editoriale</li>
-            <li>✓ Analisi performance</li>
-        </ul>
-
-
-        <a href="#">
-            Richiedi informazioni
-        </a>
-
-
-    </div>
-
-
-
-
-
-    <div class="price-card">
-
-
-        <h3>PREMIUM</h3>
-
-
-        <p class="subtitle">
-            Gestione completa
-            della presenza digitale.
-        </p>
-
-
-        <ul>
-            <li>✓ Strategia avanzata</li>
-            <li>✓ Contenuti personalizzati</li>
-            <li>✓ Report dettagliati</li>
-            <li>✓ Consulenza continua</li>
-        </ul>
-
-
-        <a href="#">
-            Richiedi informazioni
-        </a>
-
-
-    </div>
-
-
-</div>
-
-
-</section>
-<section id="cta" class="cta-premium">
-
-    <div class="cta-box">
-
-        <span>
-            CONSULENZA GRATUITA
-        </span>
-
-
-        <h2>
-            Inizia a far crescere
-            il tuo brand sui social
-        </h2>
-
-
-        <p>
-            Raccontami il tuo progetto:
-            analizzeremo insieme obiettivi,
-            idee e la strategia più adatta
-            per raggiungerli.
-        </p>
-
-
-        <a href="https://wa.me/NUMERO"
-        class="whatsapp-btn">
-
-            💬 Richiedi una consulenza gratuita
-
-        </a>
-
-
-    </div>
-
-
-</section>
-
-<footer class="contact-premium">
-
-
-    <div class="contact-container">
-
-
-        <h2>
-            Parliamo del tuo prossimo progetto
-        </h2>
-
-
-        <div class="contact-links">
-
-
-            <a href="#">
-                📱 WhatsApp
-            </a>
-
-
-            <a href="#">
-                📸 Instagram
-            </a>
-
-
-            <a href="#">
-                ✉ Email
-            </a>
-
-
+        <div class="contact-card reveal">
+          <div class="ring"><div class="ring-inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="#201D19" stroke-width="2"/><circle cx="12" cy="12" r="3.4" stroke="#201D19" stroke-width="2"/><circle cx="16.6" cy="7.4" r="0.9" fill="#201D19"/></svg>
+          </div></div>
+          <h3>Instagram</h3>
+          <p>Guarda i contenuti in azione e i progetti più recenti.</p>
+          <p class="contact-detail">chiarablessich</p>
+          <a href="https://instagram.com/chiarablessich" target="_blank" rel="noopener" class="btn btn-ghost btn-block">Vai al profilo</a>
         </div>
 
-
-        <p class="copyright">
-
-            © 2026 Chiara Blessich
-            Social Media Manager
-
-        </p>
-
-
+      </div>
     </div>
+  </section>
 
+</main>
 
+<footer>
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <div class="ring"><div class="ring-inner">CB</div></div>
+      <span class="footer-tagline">Content strategy con la testa, community con il cuore.</span>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#chi-sono">Chi sono</a></li>
+      <li><a href="#portfolio">Portfolio</a></li>
+      <li><a href="#pacchetti">Pacchetti</a></li>
+      <li><a href="#contatti">Contatti</a></li>
+    </ul>
+  </div>
+  <div class="wrap footer-bottom">© 2026 Chiara Blessich — Social Media Manager</div>
 </footer>
-<a href="https://wa.me/334 279 7655" class="whatsapp-float" target="_blank">
-    💬 Contattami su WhatsApp
-</a>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // Sticky header shadow on scroll
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 8);
+  });
+
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll reveal
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduceMotion && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+  }
+
+  // Copy email on click of the email detail text
+  const emailDetail = document.getElementById('emailDetail');
+  const toast = document.getElementById('toast');
+  emailDetail.style.cursor = 'pointer';
+  emailDetail.title = 'Clicca per copiare';
+  emailDetail.addEventListener('click', () => {
+    navigator.clipboard.writeText(emailDetail.textContent.trim()).then(() => {
+      toast.textContent = 'Email copiata negli appunti';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    });
+  });
+</script>
+
 </body>
 </html>
